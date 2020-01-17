@@ -25,7 +25,9 @@
     "react-router-dom": "^5.0.1",
     "reflect-metadata": "^0.1.13",
     "request": "^2.88.0",
-    "sass": "^1.22.12"
+    "sass": "^1.22.12",
+    "slate-fork": "github:stsiwo/slate-fork",
+    "slate-react-fork": "github:stsiwo/slate-react-fork"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
@@ -35,6 +37,7 @@
     "@testing-library/jest-dom": "^4.1.0",
     "@testing-library/react": "^9.1.4",
     "@testing-library/react-hooks": "^2.0.1",
+    "@types/direction": "^1.0.0",
     "@types/faker": "^4.1.5",
     "@types/history": "^4.7.3",
     "@types/jest": "^24.0.18",
@@ -58,7 +61,7 @@
     "style-loader": "^0.23.1",
     "ts-jest": "^24.0.2",
     "ts-loader": "^6.0.4",
-    "typescript": "3.5.1",
+    "typescript": "3.7.4",
     "webpack": "^4.32.2",
     "webpack-cli": "^3.3.2",
     "webpack-dev-server": "^3.4.1",
