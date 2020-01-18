@@ -10,10 +10,11 @@ import { withHistory } from 'slate-history-fork'
 import { LinkElement, LinkToolBarBtn, withLinks } from './LinkPlugins';
 import { BlockButton, MarkButton, HOTKEYS, LIST_TYPES, toggleMark, NumberedListElement, ListItemElement, HeadingTwoElement, HeadingOneElement, BulletedListElement, BlockQuoteElement, Leaf } from './RichText';
 import isHotkey from 'is-hotkey'
+import { withEmbeds, EmbedsElement, EmbedsToolBarBtn } from './EmbedPlugins';
 
 const App = (props: any) => {
   // Create a Slate editor object that won't change across renders.
-  const editor = React.useMemo(() => withImages(withLinks(withReact(withHistory(createEditor())))), [])
+  const editor = React.useMemo(() => withEmbeds(withImages(withLinks(withReact(withHistory(createEditor()))))), [])
 
   console.log("current editor")
   console.log(editor)
@@ -31,6 +32,8 @@ const App = (props: any) => {
     switch (props.element.type) {
       case 'image':
         return <ImageElement {...props} />
+      case 'video':
+        return <EmbedsElement {...props} />
       case 'link':
         return <LinkElement {...props} />
       case 'block-quote':
@@ -62,6 +65,7 @@ const App = (props: any) => {
       <h1>Welcome to React w/ TypeScript Template</h1>
       <Slate editor={editor} value={value} onChange={value => setValue(value)} >
         <ImageToolBarBtn editor={editor} />
+        <EmbedsToolBarBtn editor={editor} />
         <ImageSearchToolBarBtn editor={editor} />
         <LinkToolBarBtn editor={editor} />
         <MarkButton format="bold" icon="format_bold" />

@@ -12,7 +12,7 @@ export const HOTKEYS = {
 
 export const LIST_TYPES = ['numbered-list', 'bulleted-list']
 
-const emptyText: Text = { text: '' }
+const emptyText = { text: '' }
 
 export const toggleBlock = (editor: Editor, format: string) => {
   console.log("inside toggleBlock")
