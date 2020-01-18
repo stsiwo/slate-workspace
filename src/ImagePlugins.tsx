@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Element, Text, Transforms, Editor } from "slate-fork";
-import { ReactEditor, RenderElementProps } from 'slate-react-fork';
+import { Element, Text, Transforms, Editor, Path } from "../fork/slate";
+import { ReactEditor, RenderElementProps } from '../fork/slate-react';
 import { FloatProperty } from 'csstype';
 import cloneDeep from 'lodash/cloneDeep'
 import { ToolBarBtnType } from './types';
@@ -57,23 +57,12 @@ export const withImages = (editor: ReactEditor) => {
       }
 
       console.log("leaf")
-      const textOfCurrentElement = Editor.leaf(editor, editor.selection)[0].text
+      const textOfCurrentElement = Editor.getTextOfCurrentElement(editor) 
 
-      if (textOfCurrentElement) {
-        console.log("text is not empty")
-        const currentOffset = editor.selection.anchor.offset
-        if (currentOffset === 0) {
-          console.log("offset is 0")
-          Transforms.insertNodes(editor, image, { at: editor.selection })
-        }
-        else {
-          console.log("offset is not 0")
-          Transforms.insertNodes(editor, image, { at: editor.selection })
-          Transforms.insertNodes(editor, nextDefaultElement, { at: Editor.after(editor, editor.selection) })
-        }
-      }
-      else {
-        console.log('text is empty')
+      /**
+       * do nothing if node at the current direction has text
+       **/
+      if (!textOfCurrentElement) {
         Transforms.setNodes(editor, image, { at: editor.selection })
         Transforms.insertNodes(editor, nextDefaultElement, { at: Editor.after(editor, editor.selection) })
       }
@@ -81,36 +70,6 @@ export const withImages = (editor: ReactEditor) => {
     tempInput.click();
   }
 
-  editor.searchImage = () => {
-    console.log("search image is called")
-    //const [match] = Editor.nodes(editor, {
-    //  // 'n' : current element at the current selection/position
-    //  match: n => {
-    //    console.log(n)
-    //    return n.type === 'image'
-    //  },
-    //})
-
-    const targetImageElement = editor.children.map((ele: Element) => {
-      console.log("iterate all children")
-      console.log(ele)
-      if (ele.type === "image" && ele.attributes['data-img-id'] === 3) {
-        console.log("found element!!")
-        const newStyle = {
-          width: "50%",
-          margin: '0 auto auto auto',
-          display: 'inline-block',
-          float: 'left' as FloatProperty
-        }
-        const newImage: Element = cloneDeep(ele);
-        console.log("copied image element")
-        newImage.attributes.style = newStyle
-        console.log(newImage)
-        //Transforms.setNodes(editor, newImage
-      }
-    })
-
-  }
   return editor as ImagePluginEditor
 }
 
@@ -153,7 +112,14 @@ export const ImageElement: React.FunctionComponent<ImageRenderElementProps> = pr
 }
 
 export const ImageToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) => {
-  return (
+  /**
+   * hide image tool bar if current element has non-empty text
+   *  - if visible, sometime cause error
+   *  - also double validation: even if this toolbar is visible and user try to insert image in the node which has text
+   *    it can't do it because of insertImage(). it also check if it has text or not
+   *  - or use IsActive function and make this toolbar button disable (proposal)
+   **/
+  return ( props.editor.selection && !Editor.getTextOfCurrentElement(props.editor).text &&
     <button
       className="small-icon-wrapper"
       onMouseDown={(e: React.MouseEvent<HTMLElement>) => {
@@ -172,21 +138,3 @@ export const ImageToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) 
   )
 }
 
-export const ImageSearchToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) => {
-  return (
-    <button
-      className="small-icon-wrapper"
-      onMouseDown={(e: React.MouseEvent<HTMLElement>) => {
-        console.log("you clicked insert search iamge btn")
-        event.preventDefault()
-
-        if (props.editor.selection) {
-          props.editor.searchImage()
-        }
-      }}
-
-    >
-      Insert Image Btn
-    </button>
-  )
-}

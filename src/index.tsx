@@ -1,12 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 // Import the Slate editor factory.
-import { createEditor, Node, Editor, Transforms } from 'slate-fork'
+import { createEditor, Node, Editor, Transforms } from '../fork/slate'
 
 // Import the Slate components and React plugin.
-import { Slate, Editable, withReact, RenderElementProps } from 'slate-react-fork'
-import { withImages, ImageToolBarBtn, ImageElement, ImageSearchToolBarBtn } from './ImagePlugins';
-import { withHistory } from 'slate-history-fork'
+import { Slate, Editable, withReact, RenderElementProps } from '../fork/slate-react'
+import { withImages, ImageToolBarBtn, ImageElement } from './ImagePlugins';
+import { withHistory } from '../fork/slate-history'
 import { LinkElement, LinkToolBarBtn, withLinks } from './LinkPlugins';
 import { BlockButton, MarkButton, HOTKEYS, LIST_TYPES, toggleMark, NumberedListElement, ListItemElement, HeadingTwoElement, HeadingOneElement, BulletedListElement, BlockQuoteElement, Leaf } from './RichText';
 import isHotkey from 'is-hotkey'
@@ -66,7 +66,6 @@ const App = (props: any) => {
       <Slate editor={editor} value={value} onChange={value => setValue(value)} >
         <ImageToolBarBtn editor={editor} />
         <EmbedsToolBarBtn editor={editor} />
-        <ImageSearchToolBarBtn editor={editor} />
         <LinkToolBarBtn editor={editor} />
         <MarkButton format="bold" icon="format_bold" />
         <MarkButton format="italic" icon="format_italic" />

@@ -1,3 +1,0 @@
-fix note:
-	1. slate-fork interface/editor 1251 line and remove fixed part
-	2. slate-fork transforms/general 24 line and remove fixed part

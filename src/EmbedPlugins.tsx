@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Element, Text, Transforms, Editor } from "slate-fork";
-import { ReactEditor, RenderElementProps, useEditor, useSelected, useFocused } from 'slate-react-fork';
+import { Element, Text, Transforms, Editor } from "../fork/slate";
+import { ReactEditor, RenderElementProps, useEditor, useSelected, useFocused } from '../fork/slate-react';
 import { FloatProperty } from 'csstype';
 import cloneDeep from 'lodash/cloneDeep'
 import { ToolBarBtnType } from './types';

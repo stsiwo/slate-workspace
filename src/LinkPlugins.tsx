@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Element, Text, Transforms, Editor, Range } from "slate-fork";
-import { ReactEditor, RenderElementProps } from 'slate-react-fork';
+import { Element, Text, Transforms, Editor, Range } from "../fork/slate";
+import { ReactEditor, RenderElementProps } from '../fork/slate-react';
 import { FloatProperty } from 'csstype';
 import cloneDeep from 'lodash/cloneDeep'
 import isUrl from 'is-url'

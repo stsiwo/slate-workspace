@@ -14,11 +14,19 @@
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
+    "@types/debounce": "^1.2.0",
+    "@types/esrever": "^0.2.0",
     "@types/events": "^3.0.0",
+    "@types/is-hotkey": "^0.1.1",
     "@types/is-url": "^1.2.28",
     "@types/lodash": "^4.14.149",
+    "debounce": "^1.2.0",
+    "direction": "^1.0.3",
+    "esrever": "^0.2.0",
     "events": "^3.0.0",
+    "immer": "^5.3.2",
     "inversify": "^5.0.1",
+    "is-hotkey": "^0.1.6",
     "is-url": "^1.2.4",
     "lodash": "^4.17.15",
     "react": "^16.8.6",
@@ -28,9 +36,7 @@
     "reflect-metadata": "^0.1.13",
     "request": "^2.88.0",
     "sass": "^1.22.12",
-    "slate-fork": "github:stsiwo/slate-fork",
-    "slate-history-fork": "github:stsiwo/slate-history-fork",
-    "slate-react-fork": "github:stsiwo/slate-react-fork"
+    "scroll-into-view-if-needed": "^2.2.22"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",

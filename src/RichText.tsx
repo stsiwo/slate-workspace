@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ToolBarBtnType } from "./types";
-import { Transforms, Editor, Text } from 'slate-fork'
-import { useSlate, RenderElementProps, RenderLeafProps } from 'slate-react-fork';
+import { Transforms, Editor, Text } from '../fork/slate'
+import { useSlate, RenderElementProps, RenderLeafProps } from '../fork/slate-react';
 
 export const HOTKEYS = {
   'mod+b': 'bold',
