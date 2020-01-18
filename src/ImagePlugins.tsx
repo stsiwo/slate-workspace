@@ -1,9 +1,12 @@
 import * as React from 'react'
 import { Element, Text, Transforms, Editor } from "slate-fork";
 import { ReactEditor, RenderElementProps } from 'slate-react-fork';
+import { FloatProperty } from 'csstype';
+import cloneDeep from 'lodash/cloneDeep'
 
 export declare type ImagePluginEditor = {
-  InsertImage: () => void
+  insertImage: () => void
+  searchImage: () => void
 } & ReactEditor
 
 export declare type ImageRenderElementProps = RenderElementProps & {
@@ -41,6 +44,7 @@ export const withImages = (editor: ReactEditor) => {
           onLoad: (e: React.SyntheticEvent) => {
             window.URL.revokeObjectURL(imgSrc)
           },
+          "data-img-id": 3,
           style: {
             width: "100%"
           }
@@ -74,6 +78,37 @@ export const withImages = (editor: ReactEditor) => {
       }
     }
     tempInput.click();
+  }
+
+  editor.searchImage = () => {
+    console.log("search image is called")
+    //const [match] = Editor.nodes(editor, {
+    //  // 'n' : current element at the current selection/position
+    //  match: n => {
+    //    console.log(n)
+    //    return n.type === 'image'
+    //  },
+    //})
+
+    const targetImageElement = editor.children.map((ele: Element) => {
+      console.log("iterate all children")
+      console.log(ele)
+      if (ele.type === "image" && ele.attributes['data-img-id'] === 3) {
+        console.log("found element!!")
+        const newStyle = {
+          width: "50%",
+          margin: '0 auto auto auto',
+          display: 'inline-block',
+          float: 'left' as FloatProperty
+        }
+        const newImage: Element = cloneDeep(ele); 
+        console.log("copied image element")
+        newImage.attributes.style = newStyle
+        console.log(newImage)
+        //Transforms.setNodes(editor, newImage
+      }
+    })
+
   }
   return editor as ImagePluginEditor
 }
@@ -128,6 +163,21 @@ export const ImageToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) 
         console.log("you clicked insert iamge btn")
         event.preventDefault()
         props.editor.insertImage()
+      }}
+    >
+      Insert Image Btn
+    </button>
+  )
+}
+
+export const ImageSearchToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) => {
+  return (
+    <button
+      className="small-icon-wrapper"
+      onMouseDown={(e: React.MouseEvent<HTMLElement>) => {
+        console.log("you clicked insert search iamge btn")
+        event.preventDefault()
+        props.editor.searchImage()
       }}
     >
       Insert Image Btn

@@ -15,7 +15,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "@types/events": "^3.0.0",
-    "@types/lodash": "^4.14.138",
+    "@types/lodash": "^4.14.149",
     "events": "^3.0.0",
     "inversify": "^5.0.1",
     "lodash": "^4.17.15",
@@ -27,6 +27,7 @@
     "request": "^2.88.0",
     "sass": "^1.22.12",
     "slate-fork": "github:stsiwo/slate-fork",
+    "slate-history-fork": "github:stsiwo/slate-history-fork",
     "slate-react-fork": "github:stsiwo/slate-react-fork"
   },
   "devDependencies": {

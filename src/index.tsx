@@ -1,15 +1,16 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 // Import the Slate editor factory.
-import { createEditor, Node } from 'slate-fork'
+import { createEditor, Node, Editor, Transforms } from 'slate-fork'
 
 // Import the Slate components and React plugin.
 import { Slate, Editable, withReact, RenderElementProps } from 'slate-react-fork'
-import { withImages, ImageToolBarBtn, ImageElement } from './ImagePlugins';
+import { withImages, ImageToolBarBtn, ImageElement, ImageSearchToolBarBtn } from './ImagePlugins';
+import { withHistory } from 'slate-history-fork'
 
 const App = (props: any) => {
   // Create a Slate editor object that won't change across renders.
-  const editor = React.useMemo(() => withImages(withReact(createEditor())), [])
+  const editor = React.useMemo(() => withImages(withReact(withHistory(createEditor()))), [])
 
   console.log("current editor")
   console.log(editor)
@@ -47,9 +48,31 @@ const App = (props: any) => {
       <h1>Welcome to React w/ TypeScript Template</h1>
       <Slate editor={editor} value={value} onChange={value => setValue(value)} >
         <ImageToolBarBtn editor={editor} />
+        <ImageSearchToolBarBtn editor={editor} />
         <Editable
           style={editorStyle}
           renderElement={renderElement}
+          onKeyDown={event => {
+          if (!event.ctrlKey) {
+            return
+          }
+
+          switch (event.key) {
+            case 'z': {
+              event.preventDefault()
+              console.log("let's undo")
+              editor.undo()
+              break
+            }
+
+            case 'y': {
+              event.preventDefault()
+              console.log("let's undo")
+              editor.redo()
+              break
+            }
+          }}
+          }
         />
       </Slate>
     </div>
