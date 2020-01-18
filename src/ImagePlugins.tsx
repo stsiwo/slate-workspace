@@ -3,13 +3,14 @@ import { Element, Text, Transforms, Editor } from "slate-fork";
 import { ReactEditor, RenderElementProps } from 'slate-react-fork';
 import { FloatProperty } from 'csstype';
 import cloneDeep from 'lodash/cloneDeep'
+import { ToolBarBtnType } from './types';
 
-export declare type ImagePluginEditor = {
+declare type ImagePluginEditor = {
   insertImage: () => void
   searchImage: () => void
 } & ReactEditor
 
-export declare type ImageRenderElementProps = RenderElementProps & {
+declare type ImageRenderElementProps = RenderElementProps & {
   src: string
   publicSrc: URL
   imageFile?: Blob // extract this when saving. need to remove.
@@ -101,7 +102,7 @@ export const withImages = (editor: ReactEditor) => {
           display: 'inline-block',
           float: 'left' as FloatProperty
         }
-        const newImage: Element = cloneDeep(ele); 
+        const newImage: Element = cloneDeep(ele);
         console.log("copied image element")
         newImage.attributes.style = newStyle
         console.log(newImage)
@@ -151,10 +152,6 @@ export const ImageElement: React.FunctionComponent<ImageRenderElementProps> = pr
   )
 }
 
-export declare type ToolBarBtnType = {
-  editor?: ReactEditor
-}
-
 export const ImageToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) => {
   return (
     <button
@@ -162,7 +159,12 @@ export const ImageToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) 
       onMouseDown={(e: React.MouseEvent<HTMLElement>) => {
         console.log("you clicked insert iamge btn")
         event.preventDefault()
-        props.editor.insertImage()
+        // #REFACTOR
+        // if user try to image before focus editor, not allow to do that.
+        // make user to focus first
+        if (props.editor.selection) {
+          props.editor.insertImage()
+        }
       }}
     >
       Insert Image Btn
@@ -177,8 +179,12 @@ export const ImageSearchToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (p
       onMouseDown={(e: React.MouseEvent<HTMLElement>) => {
         console.log("you clicked insert search iamge btn")
         event.preventDefault()
-        props.editor.searchImage()
+
+        if (props.editor.selection) {
+          props.editor.searchImage()
+        }
       }}
+
     >
       Insert Image Btn
     </button>

@@ -4,6 +4,7 @@ import { ReactEditor, RenderElementProps } from 'slate-react-fork';
 import { FloatProperty } from 'csstype';
 import cloneDeep from 'lodash/cloneDeep'
 import isUrl from 'is-url'
+import { ToolBarBtnType } from './types';
 
 export const withLinks = (editor: ReactEditor) => {
   const { insertData, insertText, isInline } = editor
@@ -76,10 +77,6 @@ const wrapLink = (editor: ReactEditor, url: string) => {
     Transforms.wrapNodes(editor, link, { split: true })
     Transforms.collapse(editor, { edge: 'end' })
   }
-}
-
-export declare type ToolBarBtnType = {
-  editor?: ReactEditor
 }
 
 export const LinkToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) => {
