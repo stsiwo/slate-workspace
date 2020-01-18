@@ -115,6 +115,7 @@ export const BlockButton: React.FunctionComponent<RichTextbuttonType> = ({ forma
   const editor = useSlate()
   return (
     <button
+      // 'active' is for css style for this button. nothing is relating to slatejs
       //active={isBlockActive(editor, format)}
       onMouseDown={event => {
         event.preventDefault()
