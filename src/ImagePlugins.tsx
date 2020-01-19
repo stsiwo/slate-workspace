@@ -52,19 +52,27 @@ export const withImages = (editor: ReactEditor) => {
           }
         }
       }
+      const figcaption: Element = {
+        type: 'figcaption',
+        children: [text],
+      }
+      const figure: Element = {
+        type: 'figure',
+        children: [image, figcaption],
+      }
       const nextDefaultElement: Element = {
         type: 'paragraph',
         children: [text]
       }
 
       console.log("leaf")
-      const textOfCurrentElement = Editor.getTextOfCurrentElement(editor) 
+      const textOfCurrentElement = Editor.getTextOfCurrentElement(editor)
 
       /**
        * do nothing if node at the current direction has text
        **/
       if (textOfCurrentElement) {
-        Transforms.setNodes(editor, image, { at: editor.selection })
+        Transforms.setNodes(editor, figure, { at: editor.selection })
         Transforms.insertNodes(editor, nextDefaultElement, { at: Editor.after(editor, editor.selection) })
       }
     }
@@ -114,12 +122,12 @@ export const ImageElement: React.FunctionComponent<ImageRenderElementProps> = pr
 
 const isImageDisable: (editor: Editor) => boolean = (editor) => {
   /**
-   * if current Selection is Range, it also disable Embeds tool bar btn
+   * if current Selection is collapsed, it also disable Embeds tool bar btn
    *  - this is to avoid below error
    *  - Uncaught (in promise) Error: Cannot get the leaf node at path [] because it refers to a non-leaf node: [object Object]
    **/
-  if (Range.isRange(editor.selection)) return false
-  return editor.selection && !Editor.getTextOfCurrentElement(editor).text
+    if (editor.selection && !Range.isCollapsed(editor.selection)) return false
+    return editor.selection && !Editor.getTextOfCurrentElement(editor).text
 }
 
 export const ImageToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) => {
@@ -133,8 +141,8 @@ export const ImageToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) 
   const editor = useSlate()
   const style = {
     fontSize: "20px",
-    ...(!isImageDisable(editor) &&  { pointerEvents: "none" as PointerEventsProperty}),
-    ...(!isImageDisable(editor) &&  { opacity: 0.3 }),
+    ...(!isImageDisable(editor) && { pointerEvents: "none" as PointerEventsProperty }),
+    ...(!isImageDisable(editor) && { opacity: 0.3 }),
   }
   return (
     <span

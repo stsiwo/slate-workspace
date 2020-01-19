@@ -34,6 +34,10 @@ const App = (props: any) => {
     switch (props.element.type) {
       case 'image':
         return <ImageElement {...props} />
+      case 'figure':
+        return <figure {...props.attributes}>{props.children}</figure>
+      case 'figcaption':
+        return <figcaption {...props.attributes}>{props.children}</figcaption>
       case 'video':
         return <EmbedsElement {...props} />
       case 'link':
@@ -60,11 +64,9 @@ const App = (props: any) => {
   const editorStyle = {
     width: "500px",
     height: "2000px",
-    border: "solid 1px black"
   }
 
   const slateWrapperStyle = {
-    backgroundColor: 'aqua',
     display: "flex",
     flexDirection: "row-reverse" as FlexDirectionProperty,
     justifyContent: 'center',

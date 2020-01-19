@@ -108,11 +108,11 @@ export const EmbedsElement: React.FunctionComponent<RenderElementProps> = props 
 
 const isEmbedsDisable: (editor: Editor) => boolean = (editor) => {
   /**
-   * if current Selection is Range, it also disable Embeds tool bar btn
+   * if current Selection is collapse, it also disable Embeds tool bar btn
    *  - this is to avoid below error
    *  - Uncaught (in promise) Error: Cannot get the leaf node at path [] because it refers to a non-leaf node: [object Object]
    **/
-  if (Range.isRange(editor.selection)) return false
+  if (editor.selection && !Range.isCollapsed(editor.selection)) return false
   return editor.selection && !Editor.getTextOfCurrentElement(editor).text
 }
 
