@@ -35,9 +35,14 @@ export const Path = {
    */
 
   common(path: Path, another: Path): Path {
+    console.log("inside common")
+    console.log(path)
+    console.log(another)
     const common: Path = []
 
     for (let i = 0; i < path.length && i < another.length; i++) {
+      console.log("inside for loop")
+      console.log(i)
       const av = path[i]
       const bv = another[i]
 

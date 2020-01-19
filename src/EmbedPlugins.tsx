@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Element, Text, Transforms, Editor } from "../fork/slate";
+import { Element, Text, Transforms, Editor, Range } from "../fork/slate";
 import { ReactEditor, RenderElementProps, useEditor, useSelected, useFocused, useSlate } from '../fork/slate-react';
 import { FloatProperty, PointerEventsProperty } from 'csstype';
 import cloneDeep from 'lodash/cloneDeep'
@@ -107,6 +107,12 @@ export const EmbedsElement: React.FunctionComponent<RenderElementProps> = props 
 }
 
 const isEmbedsDisable: (editor: Editor) => boolean = (editor) => {
+  /**
+   * if current Selection is Range, it also disable Embeds tool bar btn
+   *  - this is to avoid below error
+   *  - Uncaught (in promise) Error: Cannot get the leaf node at path [] because it refers to a non-leaf node: [object Object]
+   **/
+  if (Range.isRange(editor.selection)) return false
   return editor.selection && !Editor.getTextOfCurrentElement(editor).text
 }
 

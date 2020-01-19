@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Element, Text, Transforms, Editor, Path } from "../fork/slate";
+import { Element, Text, Transforms, Editor, Path, Range } from "../fork/slate";
 import { ReactEditor, RenderElementProps, useSlate } from '../fork/slate-react';
 import { FloatProperty, PointerEventsProperty } from 'csstype';
 import cloneDeep from 'lodash/cloneDeep'
@@ -113,6 +113,12 @@ export const ImageElement: React.FunctionComponent<ImageRenderElementProps> = pr
 }
 
 const isImageDisable: (editor: Editor) => boolean = (editor) => {
+  /**
+   * if current Selection is Range, it also disable Embeds tool bar btn
+   *  - this is to avoid below error
+   *  - Uncaught (in promise) Error: Cannot get the leaf node at path [] because it refers to a non-leaf node: [object Object]
+   **/
+  if (Range.isRange(editor.selection)) return false
   return editor.selection && !Editor.getTextOfCurrentElement(editor).text
 }
 

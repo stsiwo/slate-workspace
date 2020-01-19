@@ -448,7 +448,12 @@ export const Editor = {
       edge?: 'start' | 'end'
     } = {}
   ): NodeEntry<Text> {
+    console.log("at leaf")
+    console.log(at)
+    console.log(options)
     const path = Editor.path(editor, at, options)
+    console.log("after path func")
+    console.log(path)
     const node = Node.leaf(editor, path)
     return [node, path]
   },
@@ -796,8 +801,10 @@ export const Editor = {
     } = {}
   ): Path {
     const { depth, edge } = options
+    console.log("inside path")
 
     if (Path.isPath(at)) {
+      console.log("if (Path.isPath(at))")
       if (edge === 'start') {
         const [, firstPath] = Node.first(editor, at)
         at = firstPath
@@ -808,23 +815,31 @@ export const Editor = {
     }
 
     if (Range.isRange(at)) {
+      console.log("if (Range.isRange(at))")
       if (edge === 'start') {
+        console.log("if (edge === 'start')")
         at = Range.start(at)
       } else if (edge === 'end') {
+        console.log("else if (edge === 'end')")
         at = Range.end(at)
       } else {
+        console.log("else")
         at = Path.common(at.anchor.path, at.focus.path)
       }
     }
 
     if (Point.isPoint(at)) {
+      console.log("if (Point.isPoint(at))")
       at = at.path
     }
 
     if (depth != null) {
+      console.log("if (depth != null)")
       at = at.slice(0, depth)
     }
 
+    console.log("at")
+    console.log(at)
     return at
   },
 
