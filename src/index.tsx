@@ -8,9 +8,11 @@ import { Slate, Editable, withReact, RenderElementProps } from '../fork/slate-re
 import { withImages, ImageToolBarBtn, ImageElement } from './ImagePlugins';
 import { withHistory } from '../fork/slate-history'
 import { LinkElement, LinkToolBarBtn, withLinks } from './LinkPlugins';
-import { BlockButton, MarkButton, HOTKEYS, LIST_TYPES, toggleMark, NumberedListElement, ListItemElement, HeadingTwoElement, HeadingOneElement, BulletedListElement, BlockQuoteElement, Leaf } from './RichText';
+import { BlockButton, MarkButton, HOTKEYS, LIST_TYPES, toggleMark, NumberedListElement, ListItemElement, HeadingTwoElement, HeadingOneElement, BulletedListElement, BlockQuoteElement, Leaf, RichTextToolBar } from './RichText';
 import isHotkey from 'is-hotkey'
 import { withEmbeds, EmbedsElement, EmbedsToolBarBtn } from './EmbedPlugins';
+import { ToolBar } from './components/ToolBar'
+import { FlexDirectionProperty, PositionProperty } from 'csstype';
 
 const App = (props: any) => {
   // Create a Slate editor object that won't change across renders.
@@ -53,71 +55,75 @@ const App = (props: any) => {
     }
   }, [])
 
-  const renderLeaf = React.useCallback(props => <Leaf {...props} />, []) 
+  const renderLeaf = React.useCallback(props => <Leaf {...props} />, [])
 
   const editorStyle = {
     width: "500px",
+    height: "2000px",
     border: "solid 1px black"
+  }
+
+  const slateWrapperStyle = {
+    backgroundColor: 'aqua',
+    display: "flex",
+    flexDirection: "row-reverse" as FlexDirectionProperty,
+    justifyContent: 'center',
+  }
+
+  const h1Style = {
+    position: "sticky" as PositionProperty,
+    top: 0
   }
 
   return (
     <div>
-      <h1>Welcome to React w/ TypeScript Template</h1>
-      <Slate editor={editor} value={value} onChange={value => setValue(value)} >
-        <ImageToolBarBtn editor={editor} />
-        <EmbedsToolBarBtn editor={editor} />
-        <LinkToolBarBtn editor={editor} />
-        <MarkButton format="bold" icon="format_bold" />
-        <MarkButton format="italic" icon="format_italic" />
-        <MarkButton format="underline" icon="format_underlined" />
-        <MarkButton format="code" icon="code" />
-        <BlockButton format="heading-one" icon="looks_one" />
-        <BlockButton format="heading-two" icon="looks_two" />
-        <BlockButton format="block-quote" icon="format_quote" />
-        <BlockButton format="numbered-list" icon="format_list_numbered" />
-        <BlockButton format="bulleted-list" icon="format_list_bulleted" />
-        <Editable
-          style={editorStyle}
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
-          placeholder="enter your blog content here ..."
-          spellCheck
-          autoFocus
-          onKeyDown={(event: React.KeyboardEvent) => {
-            if (!event.ctrlKey) {
-              return
-            }
-
-            switch (event.key) {
-              // undo 
-              case 'z': {
-                event.preventDefault()
-                console.log("let's undo")
-                editor.undo()
-                break
+      <h1 style={h1Style}>Welcome to React w/ TypeScript Template</h1>
+      <div style={slateWrapperStyle}>
+        <Slate editor={editor} value={value} onChange={value => setValue(value)} >
+          <ToolBar />
+          <Editable
+            style={editorStyle}
+            renderElement={renderElement}
+            renderLeaf={renderLeaf}
+            placeholder="enter your blog content here ..."
+            spellCheck
+            autoFocus
+            onKeyDown={(event: React.KeyboardEvent) => {
+              if (!event.ctrlKey) {
+                return
               }
 
-              // redo
-              case 'y': {
-                event.preventDefault()
-                console.log("let's undo")
-                editor.redo()
-                break
+              switch (event.key) {
+                // undo 
+                case 'z': {
+                  event.preventDefault()
+                  console.log("let's undo")
+                  editor.undo()
+                  break
+                }
+
+                // redo
+                case 'y': {
+                  event.preventDefault()
+                  console.log("let's undo")
+                  editor.redo()
+                  break
+                }
+              }
+              for (const hotkey in HOTKEYS) {
+                if (isHotkey(hotkey, event as unknown as KeyboardEvent)) {
+                  event.preventDefault()
+                  const mark = HOTKEYS[hotkey as keyof typeof HOTKEYS]
+                  console.log("mark at onKeyDown of toolbar")
+                  console.log(mark)
+                  toggleMark(editor, mark)
+                }
               }
             }
-            for (const hotkey in HOTKEYS) {
-              if (isHotkey(hotkey, event as unknown as KeyboardEvent)) {
-                event.preventDefault()
-                const mark = HOTKEYS[hotkey as keyof typeof HOTKEYS]
-                console.log("mark at onKeyDown of toolbar")
-                console.log(mark)
-                toggleMark(editor, mark)
-              }
             }
-          }
-          }
-        />
-      </Slate>
+          />
+        </Slate>
+      </div>
     </div>
   );
 };

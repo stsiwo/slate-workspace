@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { Element, Text, Transforms, Editor, Range } from "../fork/slate";
-import { ReactEditor, RenderElementProps } from '../fork/slate-react';
+import { ReactEditor, RenderElementProps, useSlate } from '../fork/slate-react';
 import { FloatProperty } from 'csstype';
 import cloneDeep from 'lodash/cloneDeep'
 import isUrl from 'is-url'
 import { ToolBarBtnType } from './types';
+import { FaLink } from 'react-icons/fa';
 
 export const withLinks = (editor: ReactEditor) => {
   const { insertData, insertText, isInline } = editor
@@ -80,18 +81,23 @@ const wrapLink = (editor: ReactEditor, url: string) => {
 }
 
 export const LinkToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) => {
+  const editor = useSlate()
+  const style = {
+    fontSize: "20px",
+    ...(!isLinkActive(editor) &&  { opacity: 0.3 }),
+  }
   return (
-    <button
-      className="small-icon-wrapper"
+    <span
+      style={style}
       onMouseDown={(e: React.MouseEvent<HTMLElement>) => {
         console.log("you clicked insert iamge btn")
         event.preventDefault()
         const url = window.prompt('Enter the URL of the link:')
         if (!url) return
-        insertLink(props.editor, url)
+        insertLink(editor, url)
       }}
     >
-      Insert Link Btn
-    </button>
+      <FaLink />
+    </span>
   )
 }

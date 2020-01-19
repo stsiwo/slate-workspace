@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { Element, Text, Transforms, Editor } from "../fork/slate";
-import { ReactEditor, RenderElementProps, useEditor, useSelected, useFocused } from '../fork/slate-react';
-import { FloatProperty } from 'csstype';
+import { ReactEditor, RenderElementProps, useEditor, useSelected, useFocused, useSlate } from '../fork/slate-react';
+import { FloatProperty, PointerEventsProperty } from 'csstype';
 import cloneDeep from 'lodash/cloneDeep'
 import { ToolBarBtnType } from './types';
+import { FaCode } from 'react-icons/fa';
 
 
 declare type EmbedRenderElementProps = RenderElementProps & {
@@ -105,12 +106,22 @@ export const EmbedsElement: React.FunctionComponent<RenderElementProps> = props 
   )
 }
 
+const isEmbedsDisable: (editor: Editor) => boolean = (editor) => {
+  return editor.selection && !Editor.getTextOfCurrentElement(editor).text
+}
+
 export const EmbedsToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) => {
+  const editor = useSlate()
+  const style = {
+    fontSize: "20px",
+    ...(!isEmbedsDisable(editor) &&  { pointerEvents: "none" as PointerEventsProperty}),
+    ...(!isEmbedsDisable(editor) &&  { opacity: 0.3 }),
+  }
   return (
-    <button
-      className="small-icon-wrapper"
+    <span
+      style={style}
       onMouseDown={(e: React.MouseEvent<HTMLElement>) => {
-        console.log("you clicked embed video btn")
+        console.log("you clicked insert iamge btn")
         event.preventDefault()
         // #REFACTOR
         // if user try to image before focus editor, not allow to do that.
@@ -118,11 +129,11 @@ export const EmbedsToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props)
         if (props.editor.selection) {
           const url = window.prompt('Enter the URL of the link:')
           if (!url) return
-          props.editor.insertEmbeds(url)
+          editor.insertEmbeds(url)
         }
       }}
     >
-      Insert Embeds Btn
-    </button>
+      <FaCode />
+    </span>
   )
 }

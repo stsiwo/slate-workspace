@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { Element, Text, Transforms, Editor, Path } from "../fork/slate";
-import { ReactEditor, RenderElementProps } from '../fork/slate-react';
-import { FloatProperty } from 'csstype';
+import { ReactEditor, RenderElementProps, useSlate } from '../fork/slate-react';
+import { FloatProperty, PointerEventsProperty } from 'csstype';
 import cloneDeep from 'lodash/cloneDeep'
 import { ToolBarBtnType } from './types';
+import { FaImage } from 'react-icons/fa';
 
 declare type ImagePluginEditor = {
   insertImage: () => void
@@ -62,7 +63,7 @@ export const withImages = (editor: ReactEditor) => {
       /**
        * do nothing if node at the current direction has text
        **/
-      if (!textOfCurrentElement) {
+      if (textOfCurrentElement) {
         Transforms.setNodes(editor, image, { at: editor.selection })
         Transforms.insertNodes(editor, nextDefaultElement, { at: Editor.after(editor, editor.selection) })
       }
@@ -111,6 +112,10 @@ export const ImageElement: React.FunctionComponent<ImageRenderElementProps> = pr
   )
 }
 
+const isImageDisable: (editor: Editor) => boolean = (editor) => {
+  return editor.selection && !Editor.getTextOfCurrentElement(editor).text
+}
+
 export const ImageToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) => {
   /**
    * hide image tool bar if current element has non-empty text
@@ -119,22 +124,28 @@ export const ImageToolBarBtn: React.FunctionComponent<ToolBarBtnType> = (props) 
    *    it can't do it because of insertImage(). it also check if it has text or not
    *  - or use IsActive function and make this toolbar button disable (proposal)
    **/
-  return ( props.editor.selection && !Editor.getTextOfCurrentElement(props.editor).text &&
-    <button
-      className="small-icon-wrapper"
+  const editor = useSlate()
+  const style = {
+    fontSize: "20px",
+    ...(!isImageDisable(editor) &&  { pointerEvents: "none" as PointerEventsProperty}),
+    ...(!isImageDisable(editor) &&  { opacity: 0.3 }),
+  }
+  return (
+    <span
+      style={style}
       onMouseDown={(e: React.MouseEvent<HTMLElement>) => {
         console.log("you clicked insert iamge btn")
         event.preventDefault()
         // #REFACTOR
         // if user try to image before focus editor, not allow to do that.
         // make user to focus first
-        if (props.editor.selection) {
-          props.editor.insertImage()
+        if (editor.selection) {
+          editor.insertImage()
         }
       }}
     >
-      Insert Image Btn
-    </button>
+      <FaImage />
+    </span>
   )
 }
 

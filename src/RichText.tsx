@@ -2,6 +2,8 @@ import * as React from 'react'
 import { ToolBarBtnType } from "./types";
 import { Transforms, Editor, Text } from '../fork/slate'
 import { useSlate, RenderElementProps, RenderLeafProps } from '../fork/slate-react';
+import { IconType } from 'react-icons/lib/cjs';
+import { FaBold, FaItalic, FaListUl, FaListOl, FaQuoteLeft, FaHeading, FaRegFileCode, FaUnderline } from 'react-icons/fa';
 
 export const HOTKEYS = {
   'mod+b': 'bold',
@@ -30,7 +32,7 @@ export const toggleBlock = (editor: Editor, format: string) => {
   })
 
   if (!isActive && isList) {
-    const block = { type: format, children: [emptyText]}
+    const block = { type: format, children: [emptyText] }
     Transforms.wrapNodes(editor, block)
   }
 }
@@ -108,15 +110,19 @@ export const Leaf: React.FunctionComponent<RenderLeafProps> = ({ attributes, chi
 
 declare type RichTextbuttonType = {
   format: string
-  icon: any
+  icon: IconType
 }
 
 export const BlockButton: React.FunctionComponent<RichTextbuttonType> = ({ format, icon }) => {
   const editor = useSlate()
+  const Icon = icon
+  const style = {
+    fontSize: "20px",
+    ...(!isBlockActive(editor, format) && { opacity: 0.3 }),
+  }
   return (
-    <button
-      // 'active' is for css style for this button. nothing is relating to slatejs
-      //active={isBlockActive(editor, format)}
+    <span
+      style={style}
       onMouseDown={event => {
         event.preventDefault()
         console.log("Block button clicked with")
@@ -124,16 +130,21 @@ export const BlockButton: React.FunctionComponent<RichTextbuttonType> = ({ forma
         toggleBlock(editor, format)
       }}
     >
-      <i>{icon}</i>
-    </button>
+      <Icon />
+    </span>
   )
 }
 
 export const MarkButton: React.FunctionComponent<RichTextbuttonType> = ({ format, icon }) => {
   const editor = useSlate()
+  const Icon = icon
+  const style = {
+    fontSize: "20px",
+    ...(!isMarkActive(editor, format) && { opacity: 0.3 }),
+  }
   return (
-    <button
-      //active={isMarkActive(editor, format)}
+    <span
+      style={style}
       onMouseDown={event => {
         event.preventDefault()
         console.log("Mark button clicked with")
@@ -141,7 +152,26 @@ export const MarkButton: React.FunctionComponent<RichTextbuttonType> = ({ format
         toggleMark(editor, format)
       }}
     >
-      <i>{icon}</i>
-    </button>
+      <Icon />
+    </span>
   )
+}
+
+export const RichTextToolBar: React.FunctionComponent<{}> = (props) => {
+  /**
+   * {' '}: space
+   **/
+  return (
+    <>
+      <MarkButton format="bold" icon={FaBold} />{' '}
+      <MarkButton format="italic" icon={FaItalic} />{' '}
+      <MarkButton format="underline" icon={FaUnderline} />{' '}
+      <MarkButton format="code" icon={FaRegFileCode} />{' '}
+      <BlockButton format="heading-two" icon={FaHeading} />{' '}
+      <BlockButton format="block-quote" icon={FaQuoteLeft} />{' '}
+      <BlockButton format="numbered-list" icon={FaListOl} />{' '}
+      <BlockButton format="bulleted-list" icon={FaListUl} />{' '}
+    </>
+  )
+
 }
