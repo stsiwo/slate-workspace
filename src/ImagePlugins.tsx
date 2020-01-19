@@ -28,9 +28,6 @@ export const withImages = (editor: ReactEditor) => {
   // custom command
   // maybe should this be read only so other plugins can override this property
   editor.insertImage = () => {
-    console.log("current location when insertImage is called")
-    console.log(editor.selection)
-
     const tempInput = document.createElement('input')
     tempInput.type = 'file'
     tempInput.onchange = (e) => {
@@ -52,14 +49,16 @@ export const withImages = (editor: ReactEditor) => {
           }
         }
       }
-      const figcaption: Element = {
-        type: 'figcaption',
-        children: [text],
-      }
-      const figure: Element = {
-        type: 'figure',
-        children: [image, figcaption],
-      }
+      //const figcaption: Element = {
+      //  type: 'figcaption',
+      //  children: [{ text: "test figcaption"}],
+      //  attributes: {}
+      //}
+      //const figure: Element = {
+      //  type: 'figure',
+      //  children: [figcaption, image],
+      //  attributes: {}
+      //}
       const nextDefaultElement: Element = {
         type: 'paragraph',
         children: [text]
@@ -68,17 +67,18 @@ export const withImages = (editor: ReactEditor) => {
       console.log("leaf")
       const textOfCurrentElement = Editor.getTextOfCurrentElement(editor)
 
+      console.log("figure" + JSON.stringify(image))
+
       /**
        * do nothing if node at the current direction has text
        **/
       if (textOfCurrentElement) {
-        Transforms.setNodes(editor, figure, { at: editor.selection })
+        Transforms.setNodes(editor, image, { at: editor.selection })
         Transforms.insertNodes(editor, nextDefaultElement, { at: Editor.after(editor, editor.selection) })
       }
     }
     tempInput.click();
   }
-
   return editor as ImagePluginEditor
 }
 
@@ -112,11 +112,16 @@ export const withImages = (editor: ReactEditor) => {
           }
         ],
        }
+       => this does not work!!!!
  **/
 
 export const ImageElement: React.FunctionComponent<ImageRenderElementProps> = props => {
+  console.log("inside ImageElement")
+  console.log(props)
   return (
-    <img src={props.element.src} {...props.element.attributes} />
+    <figure>
+      <img src={props.element.src} {...props.element.attributes} />
+    </figure>
   )
 }
 
