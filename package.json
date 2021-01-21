@@ -24,7 +24,7 @@
     "direction": "^1.0.3",
     "esrever": "^0.2.0",
     "events": "^3.0.0",
-    "immer": "^5.3.2",
+    "immer": "^8.0.1",
     "inversify": "^5.0.1",
     "is-hotkey": "^0.1.6",
     "is-url": "^1.2.4",
